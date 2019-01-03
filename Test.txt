@@ -1,0 +1,57 @@
+package test;
+
+
+
+
+
+
+
+import java.util.List;
+
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+
+
+import demo3.Customer;
+import util1.HibernateUtil;
+
+public class TestApp {
+
+	public static void main(String[] args) {
+		Customer c1=new Customer("Mark","NY",230,30);
+		SessionFactory factory=HibernateUtil.getSessionFactory();
+		Session session=factory.openSession();
+		Transaction tx=session.beginTransaction();
+		
+		int x=(Integer) session.save(c1);
+		System.out.println("customer data saved");
+		
+		Customer cust=(Customer) session.load(Customer.class, x);
+		System.out.println(cust);
+		Customer c2=new Customer("Mark2","ca",230,30);
+		Customer c3=new Customer("Mark3","eg",230,30);
+		Customer c4=new Customer("Mark4","NY",230,30);
+		session.save(c2);
+		session.save(c3);
+		session.save(c4);
+		
+		tx.commit();
+		
+		Query q=session.createQuery("from customer");
+		List<Customer> custlist=q.list();
+		
+		for(Customer c:custlist)
+		{
+			System.out.println(c);
+		}
+		
+		
+		System.out.println("closing session");
+		session.close();
+		
+		
+	}
+
+}
